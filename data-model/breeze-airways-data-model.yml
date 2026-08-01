@@ -1,0 +1,127 @@
+generated: '2026-08-01'
+method: derived
+source: https://ndc.flybreeze.com/docs/category/ndc-shopping
+api: Breeze Airways NDC Gateway
+notes: >-
+  Entity graph derived from the identifiers and XML elements Breeze publishes in its
+  NDC request/response samples and its selling-flow identifier documentation. Breeze
+  publishes no OpenAPI or XSD, so this is a reading of the documented IATA Offers and
+  Orders 21.3 message payloads as Breeze uses them — not a provider-published schema.
+entities:
+- name: Offer
+  id_field: OfferID
+  id_forms:
+  - shopping: 01773260170_id-<uuid>-o-<n>
+  - priced: sid-<uuid>
+  - reshop: id-<token>-o-<n>
+  description: A priceable travel proposal returned by AirShopping and re-minted by OfferPrice.
+  produced_by: [AirShopping, OfferPrice, OrderReshop]
+- name: OfferItem
+  id_field: OfferItemID
+  id_forms:
+  - <OfferID>-<n>
+  description: A selectable component of an Offer, associated to one or more passengers.
+- name: PriceClass
+  id_field: PriceClassID
+  description: A fare product applied to a journey, e.g. Flex (EZ) or No Flex (NO).
+  codes: [EZ, 'NO', BY, FG]
+- name: Order
+  id_field: OrderID
+  alt_field: OrderRefID
+  description: The committed booking created from an accepted priced Offer.
+  produced_by: [OrderCreate]
+  read_by: [OrderRetrieve]
+  changed_by: [OrderChange, OrderReshop, OrderQuote]
+- name: OrderItem
+  id_field: OrderItemID
+  alt_field: OrderItemRefID
+  description: A cancellable or changeable line on an Order — a flight segment or a service.
+- name: Pax
+  id_field: PaxID
+  id_forms: ['ADT<n>', 'CHD<n>', 'INF<n>']
+  type_field: PTC
+  types: [ADT, CHD, INFT]
+  description: A passenger on the offer or order, typed by IATA passenger type code.
+- name: ContactInfo
+  id_field: ContactInfoID
+  description: Reservation contact for a passenger — email, phone and postal address.
+  fields: [EmailAddressText, PhoneNumber, PostalAddress, ContactPurposeText]
+- name: Service
+  description: An ancillary sold alongside the journey — bags, seats, bundles.
+  returned_by: [ServiceList]
+  codes: [CB1, CB2, CB3, COB, BZU, AZU]
+- name: Seat
+  description: An assignable seat with PADIS 9825 seat characteristic codes.
+  returned_by: [SeatAvailability]
+- name: AirlineProfile
+  description: Carrier profile and reference data for the operating airline.
+  returned_by: [AirlineProfile]
+  owner_code: NV
+- name: DistributionChainLink
+  description: The selling organisation asserted on every request.
+  fields: [Ordinal, OrgRole, ParticipatingOrg.Name, ParticipatingOrg.OrgID]
+relationships:
+- from: Offer
+  to: OfferItem
+  kind: has_many
+  via: OfferItemID
+- from: Offer
+  to: PriceClass
+  kind: has_one
+  via: PriceClassRefID
+- from: OfferItem
+  to: Pax
+  kind: has_many
+  via: PaxRefID
+- from: Order
+  to: OrderItem
+  kind: has_many
+  via: OrderItemRefID
+- from: Order
+  to: Pax
+  kind: has_many
+  via: PaxRefID
+- from: Order
+  to: Offer
+  kind: belongs_to
+  via: OfferRefID
+  note: OrderCreate accepts a single selected priced Offer via AcceptSelectedQuotedOfferList/SelectedPricedOffer/OfferRefID.
+- from: Pax
+  to: ContactInfo
+  kind: has_one
+  via: ContactInfoID
+- from: Pax
+  to: Pax
+  kind: has_one
+  via: infant-to-adult association
+  note: Each INFT must be associated to a distinct ADT; infants may not outnumber adults.
+- from: OrderItem
+  to: Service
+  kind: has_one
+  via: ServiceRefID
+- from: OrderItem
+  to: Seat
+  kind: has_one
+  via: seat selection
+identifier_flow:
+  note: >-
+    Identifier values are re-minted between steps. See
+    conventions/breeze-airways-conventions.yml (identifiers) — reusing an earlier
+    step's OfferID can undo expected changes or error.
+  sequence:
+  - AirShopping returns many OfferIDs
+  - OfferPrice consumes one or many OfferIDs and returns a single priced OfferID
+  - ServiceList and SeatAvailability consume the priced OfferID and return their own response IDs
+  - OrderCreate consumes the priced OfferID and its OfferItemIDs and returns an Order
+  - OrderRetrieve, OrderReshop and OrderChange operate on OrderRefID and OrderItemRefID
+x-evidence:
+  fetched: '2026-08-01'
+  urls:
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-shopping/ndc-selling-flow
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-shopping/AirShopping
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-shopping/OrderCreate
+    http_status: 200
+  - url: https://ndc.flybreeze.com/news/orderReshop-flows-added-2025-09-25
+    http_status: 200

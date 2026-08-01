@@ -1,0 +1,100 @@
+generated: '2026-08-01'
+method: searched
+source: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+api: Breeze Airways NDC Gateway
+environments:
+- name: sandbox
+  host: ndcr4y.test.mx.navitaire.com
+  base_url: https://ndcr4y.test.mx.navitaire.com
+  status: current
+  since: '2025-08-27'
+  source: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+- name: sandbox (retired)
+  host: ndc.test.mx.navitaire.com
+  status: decommissioned
+  retired: '2025-08-27'
+  failure_mode: 404 resource not found, or unable to connect to server
+  source: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+- name: production
+  host: ndcr4y.prod.mx.navitaire.com
+  base_url: https://ndcr4y.prod.mx.navitaire.com
+  status: current
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+  note: Host taken from the iss claim of the sample production bearer token published on the authentication page.
+access:
+  self_service: false
+  ip_allowlist_required: true
+  ip_allowlist_sla: typically fulfilled within one week
+  prerequisites:
+  - IATA or ARC agency number
+  - Executed commercial agreement, or an agreement in principle for sandbox access
+  - Declared agency content type (leisure, business/corporate, federal government)
+  - Egress IP addresses, specified per environment
+  credential_delivery:
+    method: Bitwarden Send secure link
+    url: https://send.bitwarden.com
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started
+keys:
+  subscription_key:
+    header: Ocp-Apim-Subscription-Key
+    scope: unique per partner AND per environment
+    rotation: does not change per session; reissued on environment migration
+  bearer_token:
+    obtained_from: POST /api/Selling/r3.x/Auth
+    ttl: 00:30:00
+    scope: one token per transaction flow; concurrent reuse across bookings fails
+test_data:
+  note: >-
+    Breeze publishes no magic test card numbers or synthetic passenger identifiers.
+    The sandbox is a live-schedule test reservation system, so testing is driven by
+    real Breeze markets. The documented sample routes below are the published
+    fixtures for shopping tests.
+  sample_markets:
+  - market: SNA-PVU
+    characteristics: operates twice daily, bidirectional
+  - market: CHS-LAS
+    characteristics: near-daily; some direct (BreezeThru), some nonstop
+  - market: PVD-MCO
+    characteristics: near-daily; some nonstop, some direct (BreezeThru), some connections
+  - market: BDL-MCO
+    characteristics: Monday, Thursday, Friday and Sunday; some nonstop, some direct (BreezeThru), some connections
+  sample_markets_updated: '2025-04'
+  sample_markets_source: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-shopping/AirShopping
+  passenger_types:
+  - code: ADT
+    name: Adult
+  - code: CHD
+    name: Child — must not be able to book without a traveler older than 18
+  - code: INFT
+    name: Lap infant — must not outnumber adults
+  fare_products_to_test:
+  - EZ (Flex) and NO (No Flex) for OTA/leisure partners
+  - BY (BreezeCorp) for TMC partners
+  - FG (US Federal Government) for specialized TMC partners
+  ancillaries_to_test:
+  - Checked bags CB1, CB2, CB3 — cumulative, attached in sequence
+  - Carry-on bag COB — single SSR
+  - Bundles BZU (Nicer) and AZU (Nicest), OTA/leisure only, including a selected $0 seat and an upgraded seat
+  - A paid seat selection
+certification:
+  url: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+  method: >-
+    Collaborative — Breeze prefers to join the partner's Slack or Teams instance as
+    a guest user. Partners send test PNRs to their implementation contacts for
+    feedback and approval, and may combine multiple tests in one booking.
+  required_servicing_test: Create a distinct paid booking and cancel it (void).
+x-evidence:
+  fetched: '2026-08-01'
+  urls:
+  - url: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-shopping/AirShopping
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+    http_status: 200
+  probe:
+    note: Both gateway hosts resolve in DNS but refuse anonymous TCP connections, consistent with the documented IP allowlist.
+    ndcr4y.prod.mx.navitaire.com: {dns: 172.175.233.85, https_connect: failed}
+    ndcr4y.test.mx.navitaire.com: {dns: 135.18.200.30, https_connect: failed}

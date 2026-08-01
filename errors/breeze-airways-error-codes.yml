@@ -1,0 +1,134 @@
+generated: '2026-08-01'
+method: searched
+source: https://ndc.flybreeze.com/docs/ndc-for-developers/general-ndc-errors
+docs: https://ndc.flybreeze.com/docs/ndc-for-developers/general-ndc-errors
+api: Breeze Airways NDC Gateway
+format: iata-ndc-errors
+rfc9457: false
+envelope:
+  description: >-
+    Errors are returned inside the IATA NDC response payload as Errors/Error
+    elements. More than one Error element can appear in a single response. Gateway
+    and reservation-system failures are additionally surfaced on HTTP response
+    headers.
+  body_elements:
+  - name: TypeCode
+    description: The Breeze/Navitaire error code identifier.
+    required: true
+  - name: DescText
+    description: A description of the error encountered and suggested remedial steps.
+    required: false
+  - name: LangCode
+    description: Language of DescText. Always returned as "en".
+    required: true
+  header_fields:
+  - name: Error-Code-0
+    description: Error code returned on the HTTP response headers (indexed, 0-based).
+  - name: Error-Msg-0
+    description: Human readable error message returned on the HTTP response headers.
+  - name: WWW-Authenticate
+    description: Returned as AzureApiManagementKey on a 401 subscription-key failure.
+error_classes:
+- prefix: CF
+  area: Configuration / authentication
+- prefix: AS
+  area: AirShopping
+- prefix: AP
+  area: AirlineProfile
+errors:
+- code: CF4000
+  area: authentication
+  title: Authentication failure
+  description: The configured system user or anonymous user failed authentication.
+  variants:
+  - message: 'Unable to find best role for agent…'
+    http_status: 500
+    cause: The role code defined in the URL does not match the key provided in the Authorization token.
+    remediation: Correct the role parameter value, or remove the parameter from the authentication request.
+  - message: 'Unable to decode credentials. Please ensure correct format.'
+    http_status: 500
+    cause: No Authorization header provided, or an invalid key was provided.
+    remediation: Provide valid credentials.
+  - message: 'The agent [*agent name*] is locked.'
+    http_status: 500
+    cause: Multiple invalid login credential attempts, or Breeze initiated an agent lock.
+    remediation: Contact Breeze to request an agent unlock.
+- code: AS2000
+  area: AirShopping
+  title: No offers available
+  description: No offers available for the requested criteria.
+- code: AS2001
+  area: AirShopping
+  title: Market or date unavailable
+  description: Date and market combinations are unavailable for the requested itinerary.
+- code: AS2003
+  area: AirShopping
+  title: Bundle information unavailable
+  description: Bundle Information is not available in Shopping.
+- code: AS4001
+  area: AirShopping
+  title: Invalid cabin code
+  description: 'Validation failure for AirShoppingRQ message: invalid cabin code in request.'
+- code: AS4003
+  area: AirShopping
+  title: Passenger mix validation failure
+  description: 'Validation failure for AirShoppingRQ message: infants outnumber adults.'
+- code: AS4004
+  area: AirShopping
+  title: Passenger mix validation failure
+  description: 'Validation failure for AirShoppingRQ message: infants outnumber adults.'
+- code: AS4005
+  area: AirShopping
+  title: Passenger mix validation failure
+  description: 'Validation failure for AirShoppingRQ message: infants outnumber adults.'
+- code: AS4047
+  area: AirShopping
+  title: Invalid infant association
+  description: Adult Pax associated to multiple Infant Pax; each Infant Pax must be associated to a distinct adult.
+- code: AP4001
+  area: AirlineProfile
+  title: Invalid profile owner
+  description: Expected profile owner entry in the AirlineProfileRQ message is invalid.
+- code: AP4002
+  area: AirlineProfile
+  title: Invalid request format
+  description: Invalid format in AirlineProfileRQ.
+transport_failures:
+- symptom: Connect ETIMEDOUT
+  cause: The calling IP address is not allowlisted on the Breeze NDC gateway.
+  remediation: Call from an allowlisted host, or ask Breeze to update the allowlist.
+- symptom: HTTP 401 Access Denied with WWW-Authenticate AzureApiManagementKey
+  cause: Missing, stale or incorrect Ocp-Apim-Subscription-Key.
+  remediation: Provide a valid subscription key for the environment being called.
+- symptom: HTTP 404 resource not found / unable to connect to server
+  cause: Requests sent to the decommissioned test environment ndc.test.mx.navitaire.com.
+  remediation: Move to ndcr4y.test.mx.navitaire.com and use the reissued subscription key.
+  source: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+known_issues:
+- id: DISTRO-92
+  title: Incorrect SeatCharacteristicCode values
+  first_reported: '2024-06-01'
+  last_updated: '2025-10-12'
+  status: Resolved
+  description: >-
+    Some codes returned by SeatAvailability did not match PADIS reference 9825 —
+    notably standard economy seats returned a SeatCharacteristicCode of 1
+    (Restricted seat - General).
+- id: DISTRO-93
+  title: Incorrect baggage allowance with CHD pax
+  first_reported: '2025-02'
+  last_updated: '2025-08-13'
+  status: Resolved
+  description: >-
+    Complimentary entitlements for child items such as car seats and strollers were
+    returned incorrectly.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-known-issues
+x-evidence:
+  fetched: '2026-08-01'
+  urls:
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/general-ndc-errors
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-known-issues
+    http_status: 200

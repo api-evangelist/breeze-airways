@@ -1,0 +1,54 @@
+generated: '2026-08-01'
+method: probed
+result: none
+summary: >-
+  No /.well-known/ discovery document is served on any Breeze Airways host. The
+  marketing host www.flybreeze.com answers every path with 403 from its bot
+  protection, the B2B documentation host ndc.flybreeze.com answers 404 with the
+  Docusaurus HTML shell, and both Navitaire NDC gateway hosts resolve in DNS but
+  refuse anonymous TCP connections because the gateway is IP-allowlisted. No
+  security.txt, no OIDC or OAuth authorization-server metadata, no api-catalog, no
+  ai-plugin, and no A2A agent card. No WellKnown or SecurityTxt pointer is emitted
+  in apis.yml because nothing was found.
+hosts:
+- host: https://www.flybreeze.com
+  reachable: bot-protected
+  documents:
+  - {path: /.well-known/security.txt, status: 403}
+  - {path: /.well-known/openid-configuration, status: 403}
+  - {path: /.well-known/oauth-authorization-server, status: 403}
+  - {path: /.well-known/oauth-protected-resource, status: 403}
+  - {path: /.well-known/api-catalog, status: 403}
+  - {path: /.well-known/ai-plugin.json, status: 403}
+  - {path: /.well-known/agent-card.json, status: 403}
+  - {path: /.well-known/agent.json, status: 403}
+  - {path: /openapi.json, status: 403}
+  - {path: /swagger.json, status: 403}
+- host: https://ndc.flybreeze.com
+  reachable: true
+  documents:
+  - {path: /.well-known/security.txt, status: 404}
+  - {path: /.well-known/openid-configuration, status: 404}
+  - {path: /.well-known/oauth-authorization-server, status: 404}
+  - {path: /.well-known/oauth-protected-resource, status: 404}
+  - {path: /.well-known/api-catalog, status: 404}
+  - {path: /.well-known/ai-plugin.json, status: 404}
+  - {path: /.well-known/agent-card.json, status: 404}
+  - {path: /.well-known/agent.json, status: 404}
+  - {path: /openapi.json, status: 404}
+  - {path: /swagger.json, status: 404}
+  - {path: /llms.txt, status: 404}
+  - {path: /sitemap.xml, status: 200, note: Docusaurus sitemap, 57 URLs — used to enumerate the developer documentation.}
+- host: https://ndcr4y.prod.mx.navitaire.com
+  reachable: false
+  dns: 172.175.233.85
+  note: IP-allowlisted NDC gateway; anonymous TCP connect fails, so no /.well-known/ path is observable.
+  documents: []
+- host: https://ndcr4y.test.mx.navitaire.com
+  reachable: false
+  dns: 135.18.200.30
+  note: IP-allowlisted NDC sandbox gateway; anonymous TCP connect fails.
+  documents: []
+x-evidence:
+  fetched: '2026-08-01'
+  method: curl HEAD/GET with redirect following, 15s timeout

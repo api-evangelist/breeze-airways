@@ -1,0 +1,153 @@
+generated: '2026-08-01'
+method: searched
+source: https://ndc.flybreeze.com/docs/category/ndc-for-developers
+api: Breeze Airways NDC Gateway
+summary: >-
+  Cross-cutting request/response semantics of the Breeze Airways NDC gateway,
+  transcribed from the Breeze B2B partner documentation. The gateway is not a
+  REST/JSON API — it is an IATA Offers and Orders 21.3 XML message API with
+  route-per-message addressing, a stateful session token, and reference identifiers
+  that are re-minted at each step of a flow.
+protocol:
+  style: IATA NDC message API over HTTPS
+  ndc_version: '21.3'
+  schema_family: IATA Offers and Orders (EASD 2015)
+  namespaces:
+  - http://www.iata.org/IATA/2015/EASD/00/IATA_OffersAndOrdersMessage
+  - http://www.iata.org/IATA/2015/EASD/00/IATA_OffersAndOrdersCommonTypes
+  payload_format: XML
+  auth_token_format: JSON (the Auth endpoint alone exchanges JSON)
+  addressing: one route per NDC message type
+  methods:
+    default: POST
+    also_get:
+    - /api/Shopping/r3.x/v21.3/AirlineProfile
+    - /api/Shopping/r3.x/v21.3/AirShopping
+  required_payload_attribute:
+    element: PayloadAttributes/VersionNumber
+    value: '21.3'
+  required_distribution_chain:
+    element: DistributionChain/DistributionChainLink
+    fields: [Ordinal, OrgRole, ParticipatingOrg.OrgID]
+    note: OrgRole is Seller and OrgID is the partner's agency identifier.
+authentication:
+  style: subscription key (always) + session bearer token (all routes except AirShopping)
+  detail: authentication/breeze-airways-authentication.yml
+  network: IP allowlisting is mandatory per environment.
+sessions:
+  stateful: true
+  description: >-
+    A token is not a stateless credential — the Auth call creates a unique session
+    in the Breeze reservation system. A new bearer token must be obtained for each
+    transaction flow; concurrent use of one token across bookings causes failures.
+  ttl: 00:30:00
+  ttl_seconds: 1800
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    Breeze publishes no idempotency key, request-replay or safe-retry contract for
+    the NDC gateway. Safety on retry is instead achieved by the offer/order
+    reference model — OrderCreate consumes a single priced OfferID that is invalid
+    once consumed. No Idempotency pointer is emitted for this provider because no
+    idempotency contract is documented.
+identifiers:
+  principle: >-
+    Identifier values such as OfferID change through an NDC flow as the state of a
+    reservation is modified and then committed. Reusing a value from an earlier step
+    can undo expected changes or raise errors.
+  lifecycle:
+  - step: AirShopping
+    request: no OfferID input — this begins the flow
+    response: many OfferIDs, including several per flight for different fare products
+    sample: 01773260170_id-481f7992-39cc-4e99-bf7e-8d47fa61e726-o-1
+  - step: OfferPrice
+    request: one or many OfferIDs from AirShopping; pricing across two different offers errors
+    response: a single priced OfferID
+    sample: sid-a661eaca-970d-4ab3-bc57-3ecf68e4a035
+  - step: ServiceList / SeatAvailability
+    request: the priced OfferID from OfferPrice
+    response: a new response identifier
+    sample: id-fd62c0e1-b494-4a05-8526-2d4efd057414
+  - step: OrderReshop
+    request: OfferID not used
+    response: reshop offer identifier
+    sample: id-RUNUNTNS-o-3
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-shopping/ndc-selling-flow
+pagination:
+  supported: false
+  note: NDC responses return the full offer/order document; no paging parameters are documented.
+versioning:
+  scheme: uri-path
+  gateway_release: r3.x
+  message_version: v21.3
+  example: /api/Selling/r3.x/v21.3/OfferPrice
+  detail: lifecycle/breeze-airways-lifecycle.yml
+error_envelope:
+  detail: errors/breeze-airways-error-codes.yml
+  body: Errors/Error with TypeCode, DescText, LangCode
+  headers: Error-Code-0, Error-Msg-0
+rate_limiting:
+  published: false
+  note: >-
+    Breeze publishes no rate-limit headers or quotas. Volume is governed
+    commercially at go-live — partners are asked to start below 10% of expected
+    volume and Breeze can support ramp to 100% within a business day.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+request_tracing:
+  published: false
+  note: No request-id or correlation-id header is documented.
+events:
+  webhooks_documented: false
+  note: >-
+    Issued tokens carry an "orderchangenotification" audience, implying an order
+    change notification capability, but Breeze publishes no webhook or event
+    catalogue at the B2B portal. No AsyncAPI or Webhooks artifact is emitted.
+business_rules:
+  passenger_types: [ADT, CHD, INFT]
+  constraints:
+  - Unaccompanied minors are not carried; partners must block CHD-only reservations.
+  - Infants may not outnumber adults; each infant must be associated to a distinct adult.
+  - SecureFlight data (name, gender, date of birth) is required at time of booking.
+  - Reservation contact must be the passenger's own email; agency proxy/relay addresses are rejected. Phone with country code preferred for operational SMS.
+  ancillaries:
+    checked_bags_cumulative: [CB1, CB2, CB3]
+    carry_on: COB
+    note: Checked bag SSRs are cumulative and must be attached in sequence.
+  fare_products:
+  - code: EZ
+    name: Flex
+    channel: OTA/Leisure
+  - code: 'NO'
+    name: No Flex
+    channel: OTA/Leisure
+  - code: BY
+    name: BreezeCorp
+    channel: TMC
+  - code: FG
+    name: US Federal Government
+    channel: Specialized TMC
+  bundles:
+  - code: BZU
+    name: Nicer
+    channel: OTA/Leisure
+  - code: AZU
+    name: Nicest
+    channel: OTA/Leisure
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+cross_links:
+  authentication: authentication/breeze-airways-authentication.yml
+  scopes: scopes/breeze-airways-scopes.yml
+  errors: errors/breeze-airways-error-codes.yml
+  lifecycle: lifecycle/breeze-airways-lifecycle.yml
+  sandbox: sandbox/breeze-airways-sandbox.yml
+  data_model: data-model/breeze-airways-data-model.yml
+x-evidence:
+  fetched: '2026-08-01'
+  urls:
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-shopping/ndc-selling-flow
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+    http_status: 200

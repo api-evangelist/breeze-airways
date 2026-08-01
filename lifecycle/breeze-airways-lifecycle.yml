@@ -1,0 +1,81 @@
+generated: '2026-08-01'
+method: searched
+source: https://ndc.flybreeze.com/docs/category/ndc-for-developers
+api: Breeze Airways NDC Gateway
+versioning:
+  scheme: uri-path
+  gateway_release: r3.x
+  current: v21.3
+  standard: IATA NDC / Offers and Orders 21.3
+  docs: https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started
+  note: >-
+    Route form is /api/{Shopping|Selling|Servicing}/r3.x/v21.3/{Message}. The Auth
+    route is unversioned beyond the gateway release (/api/Selling/r3.x/Auth).
+compatibility_policy:
+  statement: >-
+    "Although we work hard to maintain backward compatibility with updates to our
+    NDC services, partners should expect to make ongoing improvements so that we can
+    both better serve our shared customers."
+  url: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    Breeze publishes no formal deprecation policy page and no RFC 8594 Sunset or
+    Deprecation header support. Deprecation is communicated as dated posts on the
+    B2B news and status feed. No Deprecation pointer is emitted for this provider
+    because no policy is published.
+  observed_events:
+  - date: '2025-08-27'
+    change: Test environment ndc.test.mx.navitaire.com decommissioned in favour of ndcr4y.test.mx.navitaire.com; a new subscription key was required.
+    failure_mode: Requests to the old host return 404 resource not found or fail to connect.
+    url: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+sla:
+  url: null
+  uptime_target: null
+  note: No public SLA or uptime target is published on the B2B portal.
+status_page: https://ndc.flybreeze.com/news
+status_page_note: >-
+  The B2B portal navigation labels the news feed "News & system status". Scheduled
+  maintenance and production disruption notices are published there and tagged
+  scheduled-maintenance-events, non-production-maintenance and production-disruptions.
+status_tags:
+- https://ndc.flybreeze.com/news/tags/scheduled-maintenance-events
+- https://ndc.flybreeze.com/news/tags/non-production-maintenance
+- https://ndc.flybreeze.com/news/tags/production-disruptions
+onboarding_lifecycle:
+  certification_url: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+  process: >-
+    Certification is collaborative — Breeze prefers to join the partner's Slack or
+    Teams instance as a guest during certification, and partners send test PNRs for
+    feedback and approval.
+  required_shopping_coverage:
+    itineraries: [one-way, round trip, nonstop, direct (1+ stops, no plane change), connection]
+    passenger_types: [ADT, CHD (blocked without an adult over 18), INFT]
+    fare_types: at least one booking in each fare product authorized for the agency
+  required_servicing_coverage:
+  - Cancel a paid order (void)
+  optional_coverage:
+  - Open-jaw and multi-city itineraries
+  - Bundles (Nicer BZU / Nicest AZU, OTA and leisure partners only)
+  - Bag selection with cumulative CB1/CB2/CB3 and carry-on COB
+  - Seat selection including a paid seat
+  - Cancel a single flight on a round trip
+  - Flight credit on flight cancel
+  display_validation:
+  - Accurate fare rules displayed during the shopping flow
+  - Airline name displays as "Breeze Airways" or "Breeze"
+  - No references to Mexicana (the former airline associated with the MX airline code)
+  - Customer service and baggage fee hyperlinks validated by Breeze
+  go_live_window: Monday to Thursday, 08:00-17:00 Mountain (Denver), excluding US holidays
+  ramp_guidance: Start below 10% of expected volume and ramp to 100% within a business day as errors are resolved.
+deprecated_operations: []
+x-evidence:
+  fetched: '2026-08-01'
+  urls:
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+    http_status: 200
+  - url: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+    http_status: 200
+  - url: https://ndc.flybreeze.com/sitemap.xml
+    http_status: 200

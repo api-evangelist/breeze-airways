@@ -1,0 +1,68 @@
+generated: '2026-08-01'
+method: searched
+source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+docs: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+api: Breeze Airways NDC Gateway
+notes: >-
+  Breeze does not publish a scopes or permissions reference page, and the token
+  request does not accept a scope parameter — the client-credentials exchange
+  returns a JWT whose aud (audience) claim enumerates the services the session is
+  authorized against. Those audience values are recorded below as the provider's
+  de facto authorization surface. They are token AUDIENCES, not requestable OAuth
+  scopes; nothing here is inferred beyond the sample tokens published on the Breeze
+  authentication documentation page.
+schemes:
+- name: OAuth2ClientCredentials
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+  flows:
+  - flow: clientCredentials
+    tokenUrl: /api/Selling/r3.x/Auth
+    grant_type: client_credentials
+    expires_in: 00:30:00
+scopes: []
+token_audiences:
+- audience: shopping
+  kind: jwt-aud-claim
+  description: Shopping routes — AirlineProfile and AirShopping.
+  routes:
+  - /api/Shopping/r3.x/v21.3/AirlineProfile
+  - /api/Shopping/r3.x/v21.3/AirShopping
+- audience: selling
+  kind: jwt-aud-claim
+  description: Selling routes — offer pricing, ancillary and seat selection, order creation.
+  routes:
+  - /api/Selling/r3.x/v21.3/OfferPrice
+  - /api/Selling/r3.x/v21.3/ServiceList
+  - /api/Selling/r3.x/v21.3/SeatAvailability
+  - /api/Selling/r3.x/v21.3/OrderCreate
+- audience: servicing
+  kind: jwt-aud-claim
+  description: Servicing routes — order retrieve, quote, reshop and change.
+  routes:
+  - /api/Servicing/r3.x/v21.3/OrderRetrieve
+  - /api/Servicing/r3.x/v21.3/OrderQuote
+  - /api/Servicing/r3.x/v21.3/OrderReshop
+  - /api/Servicing/r3.x/v21.3/OrderChange
+  - /api/Servicing/r3.x/v21.3/ServiceList
+  - /api/Servicing/r3.x/v21.3/SeatAvailability
+- audience: orderchangenotification
+  kind: jwt-aud-claim
+  description: >-
+    Order change notification audience present in every issued token. Breeze
+    publishes no documentation for a notification/push surface at the B2B portal,
+    so the delivery contract for this audience is undocumented publicly.
+  routes: []
+role_codes:
+  parameter: role
+  applies_to: /api/Selling/r3.x/Auth?role={rolecode}
+  observed_values:
+  - NDCO
+  description: >-
+    An optional role code narrows the token to a reservation-system agent role and
+    halves the token request latency. NDCO is the role code visible in the published
+    sample tokens. Breeze publishes no full role-code reference; codes are issued
+    per partner.
+x-evidence:
+  fetched: '2026-08-01'
+  url: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+  http_status: 200

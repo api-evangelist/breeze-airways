@@ -1,18 +1,92 @@
 aid: breeze-airways
 name: Breeze Airways
-description: 'Breeze Airways is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Breeze Airways (Breeze Aviation Group, Inc.) is an American low-cost
+  point-to-point airline headquartered in Cottonwood Heights, Utah, founded by David
+  Neeleman and flying since May 2021. Its distribution technology surface is a partner-facing
+  IATA NDC gateway, documented at the Breeze B2B portal (ndc.flybreeze.com), which
+  exposes IATA Offers and Orders 21.3 XML messages — AirlineProfile, AirShopping,
+  OfferPrice, ServiceList, SeatAvailability and OrderCreate for shopping and selling,
+  plus OrderRetrieve, OrderQuote, OrderReshop and OrderChange for servicing — over
+  a Navitaire-hosted, IP-allowlisted gateway secured with a per-partner Azure API
+  Management subscription key and a 30-minute session bearer token. Access is limited
+  to accredited travel-agency partners (OTA, TMC and US federal government) with an
+  IATA/ARC number and an executed commercial agreement; Breeze also distributes over
+  Amadeus and Travelport GDS and via the TravelPro agent booking portal.'
+image: https://ndc.flybreeze.com/img/breeze-b2b-social-card.jpg
 url: https://raw.githubusercontent.com/api-evangelist/breeze-airways/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: ndc-partner-api
 specificationVersion: '0.20'
 created: '2026-08-01'
 modified: '2026-08-01'
 tags:
 - Company
-apis: []
+- Airlines
+- Travel
+- Aviation
+- NDC
+- Distribution
+- Booking
+- Reservations
+- Travel Agencies
+- IATA
+apis:
+- aid: breeze-airways-ndc-gateway
+  name: Breeze Airways NDC Gateway
+  description: 'The Breeze Airways NDC gateway is the airline''s direct-connect distribution
+    API for accredited travel partners. It speaks IATA Offers and Orders (NDC) 21.3
+    XML over HTTPS on a Navitaire-hosted gateway, split into three route families:
+    Shopping (AirlineProfile, AirShopping), Selling (Auth, OfferPrice, ServiceList,
+    SeatAvailability, OrderCreate) and Servicing (OrderRetrieve, OrderQuote, OrderReshop,
+    OrderChange, ServiceList, SeatAvailability). Every request carries an Ocp-Apim-Subscription-Key
+    header; all routes except AirShopping additionally require a session bearer token
+    obtained from the Auth endpoint with grant_type=client_credentials. Calling IPs
+    must be explicitly allowlisted by Breeze for the sandbox or production environment.'
+  humanURL: https://ndc.flybreeze.com/docs/category/ndc-for-developers
+  baseURL: https://ndcr4y.prod.mx.navitaire.com
+  image: https://ndc.flybreeze.com/img/breeze-b2b-social-card.jpg
+  tags:
+  - NDC
+  - Airlines
+  - Booking
+  - Reservations
+  - Travel
+  x-evidence:
+    fetched: '2026-08-01'
+    baseURL_source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+    baseURL_note: 'Production host taken from the iss claim (ndcr4y.prod.mx.navitaire.com)
+      of the sample production bearer token published on the Breeze authentication
+      docs page; the gateway is IP-allowlisted so it is not anonymously reachable
+      (TCP connect fails, DNS resolves to 172.175.233.85).'
+    sandbox_host: ndcr4y.test.mx.navitaire.com
+    sandbox_source: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+  properties:
+  - type: Documentation
+    url: https://ndc.flybreeze.com/docs/category/ndc-for-developers
+  - type: APIReference
+    url: https://ndc.flybreeze.com/docs/category/ndc-shopping
+  - type: GettingStarted
+    url: https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started
+  - type: Authentication
+    url: authentication/breeze-airways-authentication.yml
+  - type: OAuthScopes
+    url: scopes/breeze-airways-scopes.yml
+  - type: ErrorCatalog
+    url: errors/breeze-airways-error-codes.yml
+  - type: Conventions
+    url: conventions/breeze-airways-conventions.yml
+  - type: Conformance
+    url: conformance/breeze-airways-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/breeze-airways-lifecycle.yml
+  - type: DataModel
+    url: data-model/breeze-airways-data-model.yml
+  - type: Sandbox
+    url: sandbox/breeze-airways-sandbox.yml
+  - type: AgentSkill
+    url: skills/_index.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +94,57 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://forgeglobal.com/breeze-airways_stock/
+  url: https://www.flybreeze.com/
+- type: DeveloperPortal
+  url: https://ndc.flybreeze.com/
+- type: Documentation
+  url: https://ndc.flybreeze.com/docs/category/ndc-for-developers
+- type: APIReference
+  url: https://ndc.flybreeze.com/docs/category/ndc-shopping
+- type: GettingStarted
+  url: https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started
+- type: SignUp
+  url: https://ndc.flybreeze.com/docs/become-a-breeze-partner
+- type: Support
+  url: https://www.flybreeze.com/support
+- type: Blog
+  url: https://ndc.flybreeze.com/news
+- type: StatusPage
+  url: https://ndc.flybreeze.com/news
+- type: ChangeLog
+  url: https://ndc.flybreeze.com/news
+- type: ChangeLog
+  url: changelog/breeze-airways-changelog.yml
+- type: TermsOfService
+  url: https://www.flybreeze.com/page/terms-of-use
+- type: PrivacyPolicy
+  url: https://media.flybreeze.com/docs/policies/privacypolicy.pdf
+- type: Careers
+  url: https://jobs.flybreeze.com/
+- type: Authentication
+  url: authentication/breeze-airways-authentication.yml
+- type: OAuthScopes
+  url: scopes/breeze-airways-scopes.yml
+- type: ErrorCatalog
+  url: errors/breeze-airways-error-codes.yml
+- type: Conventions
+  url: conventions/breeze-airways-conventions.yml
+- type: Conformance
+  url: conformance/breeze-airways-conformance.yml
+- type: Lifecycle
+  url: lifecycle/breeze-airways-lifecycle.yml
+- type: DataModel
+  url: data-model/breeze-airways-data-model.yml
+- type: Sandbox
+  url: sandbox/breeze-airways-sandbox.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/breeze-airways-llms.txt
+- type: DomainSecurity
+  url: security/breeze-airways-domain-security.yml
+x-enrichment:
+  date: '2026-08-01'
+  status: enriched
+  artifacts_added: 17
+  pass: local-v1

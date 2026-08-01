@@ -1,0 +1,82 @@
+generated: '2026-08-01'
+method: derived
+source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+status: candidate
+summary: >-
+  No official hosted or remote Model Context Protocol server was found for Breeze
+  Airways. No MCP endpoint is referenced anywhere on the B2B portal, no MCP registry
+  entry exists, and no A2A agent card is served. The candidate tool set below is
+  DERIVED from the NDC gateway route/message table Breeze publishes on its
+  authentication page, as a proposal for an agent-facing surface. It is NOT published
+  by Breeze, and no MCPServer pointer is wired into apis.yml for that reason.
+server: null
+transport: null
+url: null
+auth:
+  subscription_key_header: Ocp-Apim-Subscription-Key
+  bearer: session JWT from POST /api/Selling/r3.x/Auth
+  network: IP allowlist required
+  detail: authentication/breeze-airways-authentication.yml
+candidate_tools:
+- name: get_airline_profile
+  maps_to: GET|POST /api/Shopping/r3.x/v21.3/AirlineProfile
+  message: IATA_AirlineProfileRQ / IATA_AirlineProfileRS
+  description: Retrieve Breeze carrier profile and reference data.
+- name: search_flights
+  maps_to: GET|POST /api/Shopping/r3.x/v21.3/AirShopping
+  message: IATA_AirShoppingRQ / IATA_AirShoppingRS
+  description: Search Breeze markets and dates for offers by origin, destination and passenger mix.
+- name: price_offer
+  maps_to: POST /api/Selling/r3.x/v21.3/OfferPrice
+  message: IATA_OfferPriceRQ / IATA_OfferPriceRS
+  description: Price one or more selected offers and return a single priced offer.
+- name: list_services
+  maps_to: POST /api/Selling/r3.x/v21.3/ServiceList
+  message: IATA_ServiceListRQ / IATA_ServiceListRS
+  description: List ancillaries (bags, bundles) available against a priced offer.
+- name: get_seat_availability
+  maps_to: POST /api/Selling/r3.x/v21.3/SeatAvailability
+  message: IATA_SeatAvailabilityRQ / IATA_SeatAvailabilityRS
+  description: Retrieve the seat map and seat characteristics for a priced offer.
+- name: create_order
+  maps_to: POST /api/Selling/r3.x/v21.3/OrderCreate
+  message: IATA_OrderCreateRQ / IATA_OrderViewRS
+  description: Commit a priced offer, passengers and contact details into a Breeze order.
+- name: retrieve_order
+  maps_to: POST /api/Servicing/r3.x/v21.3/OrderRetrieve
+  message: IATA_OrderRetrieveRQ / IATA_OrderViewRS
+  description: Retrieve an existing order, including any issued travel credit.
+- name: quote_order_change
+  maps_to: POST /api/Servicing/r3.x/v21.3/OrderQuote
+  message: IATA_OrderQuoteRQ / IATA_OrderReshopRS
+  description: Quote the price impact of a proposed change to an existing order.
+- name: reshop_order
+  maps_to: POST /api/Servicing/r3.x/v21.3/OrderReshop
+  message: IATA_OrderReshopRQ / IATA_OrderReshopRS
+  description: Cancel a whole order (CancelOrderRef) or remove individual flights/services (DeleteOrderItem).
+- name: change_order
+  maps_to: POST /api/Servicing/r3.x/v21.3/OrderChange
+  message: IATA_OrderChangeRQ / IATA_OrderViewRS
+  description: Commit a reshop selection to the order; refunds or credit are processed asynchronously.
+- name: list_order_services
+  maps_to: POST /api/Servicing/r3.x/v21.3/ServiceList
+  message: IATA_ServiceListRQ / IATA_ServiceListRS
+  description: List ancillaries available to add to an existing order.
+- name: get_order_seat_availability
+  maps_to: POST /api/Servicing/r3.x/v21.3/SeatAvailability
+  message: IATA_SeatAvailabilityRQ / IATA_SeatAvailabilityRS
+  description: Retrieve seat availability for an existing order.
+agent_cautions:
+- Every tool writes into a live airline reservation system; there is no idempotency key and no replay-safe retry contract.
+- Tokens are stateful sessions with a 30 minute lifetime and must not be shared across concurrent bookings.
+- Offer identifiers are re-minted between steps; reusing a stale OfferID can undo an intended change.
+- create_order and change_order have financial consequence and should require human confirmation.
+x-evidence:
+  fetched: '2026-08-01'
+  urls:
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-servicing/ndc-servicing-flows
+    http_status: 200
+  mcp_probes:
+    note: No MCP endpoint is advertised on any Breeze host; nothing to POST tools/list against.

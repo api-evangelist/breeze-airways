@@ -1,0 +1,29 @@
+generated: '2026-08-01'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: www.flybreeze.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Jan  1 23:59:59 2027 GMT
+  hsts: false
+- host: ndc.flybreeze.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 28 04:40:58 2026 GMT
+  hsts: false
+- host: ndcr4y.prod.mx.navitaire.com
+  https: false
+domains:
+- domain: flybreeze.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: quarantine
+- domain: navitaire.com
+  dnssec: false
+  caa: []
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

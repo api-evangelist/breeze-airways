@@ -1,0 +1,123 @@
+generated: '2026-08-01'
+method: searched
+source: https://ndc.flybreeze.com/docs/category/ndc-for-developers
+api: Breeze Airways NDC Gateway
+standards:
+- id: iata-ndc-21.3
+  name: IATA New Distribution Capability (Offers and Orders) 21.3
+  conforms: true
+  evidence: >-
+    Getting started documents the gateway as using the NDC 21.3 schema; every
+    request carries PayloadAttributes/VersionNumber 21.3 and the IATA
+    OffersAndOrdersMessage / OffersAndOrdersCommonTypes namespaces; routes are
+    versioned /v21.3/.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started
+- id: iata-one-order
+  name: IATA ONE Order / Offers and Orders order model
+  conforms: true
+  evidence: >-
+    Order lifecycle is expressed as OrderCreate, OrderRetrieve, OrderQuote,
+    OrderReshop and OrderChange with OrderID/OrderItemID references — the Offers and
+    Orders order data model rather than a PNR/ticket model.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+- id: iata-padis-9825
+  name: IATA PADIS code set 9825 (seat characteristics)
+  conforms: true
+  evidence: >-
+    SeatAvailability returns PADIS SeatCharacteristicCode values; a documented
+    defect (DISTRO-92, resolved 2025-10-12) tracked codes that did not match PADIS
+    reference 9825, and the portal publishes an IATA PADIS seat codes reference page.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/ndc-shopping/SeatAvailability/IATA-PADIS-seat-codes
+- id: oauth2-client-credentials
+  name: OAuth 2.0 client credentials grant (RFC 6749 §4.4)
+  conforms: partial
+  evidence: >-
+    The Auth endpoint accepts {"grant_type":"client_credentials"} with HTTP Basic
+    client authentication and returns access_token / token_type Bearer / expires_in.
+    Deviations - expires_in is a duration string ("00:30:00") rather than the
+    RFC-required integer seconds; there is no scope parameter and no token
+    introspection or revocation endpoint; the issued token is stateful (a session)
+    rather than a bearer credential usable concurrently.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+- id: rfc7617-http-basic
+  name: HTTP Basic authentication (RFC 7617)
+  conforms: true
+  evidence: The Auth route requires an Authorization Basic header with base64 encoded agency credentials.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+- id: rfc6750-bearer
+  name: OAuth 2.0 Bearer Token Usage (RFC 6750)
+  conforms: partial
+  evidence: >-
+    Tokens are presented as Authorization Bearer on Selling and Servicing routes.
+    Authentication failures are not returned as RFC 6750 401 challenges from the
+    reservation system — CF4000 conditions surface as HTTP 500 with Error-Code-0 and
+    Error-Msg-0 headers. The gateway-level 401 uses a WWW-Authenticate value of
+    AzureApiManagementKey.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+- id: rfc7519-jwt
+  name: JSON Web Token (RFC 7519)
+  conforms: true
+  evidence: The access_token is a JWT carrying iss, aud, exp, username and rolecode claims.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+- id: rfc9457-problem-details
+  name: RFC 9457 Problem Details for HTTP APIs
+  conforms: false
+  evidence: Errors are IATA NDC Errors/Error XML elements plus Error-Code-0/Error-Msg-0 response headers; no application/problem+json is used.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/general-ndc-errors
+- id: rfc8594-sunset-header
+  name: RFC 8594 Sunset HTTP header
+  conforms: false
+  evidence: No Sunset or Deprecation header support is documented; environment retirement is announced on the news feed.
+- id: openapi
+  name: OpenAPI Specification
+  conforms: false
+  evidence: >-
+    No OpenAPI/Swagger document is published. /openapi.json, /openapi.yaml and
+    /swagger.json return 404 on ndc.flybreeze.com and 403 on www.flybreeze.com; the
+    gateway hosts are IP-allowlisted and refuse anonymous connections.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: >-
+    No AsyncAPI document and no published webhook catalogue. An
+    "orderchangenotification" audience appears in issued tokens but no notification
+    contract is documented publicly.
+- id: tsa-secure-flight
+  name: TSA Secure Flight passenger data (US 49 CFR 1560)
+  conforms: true
+  evidence: >-
+    Certification requires SecureFlight information (name, gender, date of birth) at
+    time of booking, which Breeze must provide to authorities; data formatting is
+    validated during certification.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+- id: iata-arc-accreditation
+  name: IATA / ARC agency accreditation
+  conforms: true
+  evidence: An IATA or ARC agency number is a prerequisite for NDC gateway access.
+  source: https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started
+- id: edifact-gds
+  name: Traditional GDS distribution (EDIFACT)
+  conforms: true
+  evidence: >-
+    BreezeCorp fares are available over Amadeus GDS (1A) on an EDIFACT connection
+    that supports ticketing; Breeze is also available in Travelport+ (1G).
+    Ancillaries such as a-la-carte seats and bags are not available on that channel.
+  source: https://ndc.flybreeze.com/docs/become-a-breeze-partner
+compliance_program:
+  published: false
+  certifications: []
+  note: >-
+    Breeze publishes no trust center and no named security certifications (SOC 2,
+    ISO 27001, PCI DSS) on its public or B2B surface. No Compliance pointer is
+    emitted.
+x-evidence:
+  fetched: '2026-08-01'
+  urls:
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/certification
+    http_status: 200
+  - url: https://ndc.flybreeze.com/docs/ndc-for-developers/general-ndc-errors
+    http_status: 200

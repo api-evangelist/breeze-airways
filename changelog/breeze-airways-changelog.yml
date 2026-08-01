@@ -1,0 +1,93 @@
+generated: '2026-08-01'
+method: searched
+source: https://ndc.flybreeze.com/news
+docs: https://ndc.flybreeze.com/news
+api: Breeze Airways NDC Gateway
+scheme:
+  kind: dated-news-feed
+  note: >-
+    Breeze does not publish a versioned changelog. The B2B portal news feed
+    (labelled "News & system status") carries dated posts covering API capability
+    additions, environment changes, distribution channel additions and maintenance
+    windows. Entries below are the recent window captured from the portal sitemap
+    and post pages, newest first.
+  archive: https://ndc.flybreeze.com/news/archive
+  tags: https://ndc.flybreeze.com/news/tags
+current_version: NDC 21.3 on gateway release r3.x
+entries:
+- title: Breeze available in TravelPort+ GDS (1G)
+  url: https://ndc.flybreeze.com/news/breeze-available-in-travelport-plus-gds
+  tags: [gds, travelport, travel-agents]
+  type: distribution
+  breaking: false
+- title: Seat & bag response improvements
+  url: https://ndc.flybreeze.com/news/seat-and-bag-response-improvements
+  tags: [ndc]
+  type: improvement
+  breaking: false
+- date: '2025-09-25'
+  title: Remove individual flights with OrderReshop
+  url: https://ndc.flybreeze.com/news/orderReshop-flows-added-2025-09-25
+  tags: [ndc]
+  type: addition
+  breaking: false
+  highlights:
+  - OrderReshop documentation expanded; partners can release unpaid inventory and remove individual flights.
+  - Full order cancellation supported via the CancelOrderRef node referencing a mandatory OrderRefID.
+  - Partial cancellation supported via the DeleteOrderItem node referencing OrderItemRefID.
+  - 'Limitation: penalties and spoilage disclosed in fare rules cannot be applied during an OrderReshop session; refunds or travel credit are processed by an automated worker after OrderChange, and any credit appears on a subsequent OrderRetrieve response.'
+- date: '2025-08-27'
+  title: New NDC test environment
+  url: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+  tags: [ndc]
+  type: breaking
+  breaking: true
+  highlights:
+  - Old test environment ndc.test.mx.navitaire.com decommissioned — requests fail with 404 resource not found or cannot connect.
+  - New test environment ndcr4y.test.mx.navitaire.com requires a newly issued Ocp-Apim-Subscription-Key; old or incorrect values return 401 Access Denied.
+- date: '2025-08-11'
+  title: Reservation system upgrade (production)
+  url: https://ndc.flybreeze.com/news/scheduled-maintenance-ndc-production-2025-08-11
+  tags: [scheduled-maintenance-events]
+  type: maintenance
+  breaking: false
+- date: '2025-03-23'
+  title: NDC gateway maintenance (non-production)
+  url: https://ndc.flybreeze.com/news/scheduled-maintenance-ndc-test-24-march-2025
+  tags: [non-production-maintenance]
+  type: maintenance
+  breaking: false
+- date: '2025-03-06'
+  title: Welcome to the Breeze B2B portal
+  url: https://ndc.flybreeze.com/news/breeze-b2b-documentation-portal-launch
+  tags: [breeze-b2b]
+  type: announcement
+  breaking: false
+  highlights:
+  - Launch of the partner developer and travel agent documentation portal, carrying API references, guides and code samples.
+- title: Breeze flights available over Amadeus GDS (1A)
+  url: https://ndc.flybreeze.com/news/breeze-flights-available-on-amadeus-gds
+  tags: [gds, amadeus, travel-agents]
+  type: distribution
+  breaking: false
+authors:
+- name: Matt Fuller
+  role: Principal Technical Product Manager
+  url: https://ndc.flybreeze.com/news/authors/all-matt-fuller-articles
+- name: Austin Speaker
+  url: https://ndc.flybreeze.com/news/authors/all-austin-speaker-articles
+- name: Eric Walters
+  url: https://ndc.flybreeze.com/news/authors/all-eric-walters-articles
+- name: Jacob Erlick
+  url: https://ndc.flybreeze.com/news/authors/all-jacob-erlick-articles
+x-evidence:
+  fetched: '2026-08-01'
+  urls:
+  - url: https://ndc.flybreeze.com/sitemap.xml
+    http_status: 200
+  - url: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
+    http_status: 200
+  - url: https://ndc.flybreeze.com/news/orderReshop-flows-added-2025-09-25
+    http_status: 200
+  - url: https://ndc.flybreeze.com/news/breeze-b2b-documentation-portal-launch
+    http_status: 200
