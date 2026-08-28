@@ -12,6 +12,17 @@ description: 'Breeze Airways (Breeze Aviation Group, Inc.) is an American low-co
   to accredited travel-agency partners (OTA, TMC and US federal government) with an
   IATA/ARC number and an executed commercial agreement; Breeze also distributes over
   Amadeus and Travelport GDS and via the TravelPro agent booking portal.'
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: false
+  label: Hosted service · you call their endpoint
+  confidence: medium
+  source:
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://ndc.flybreeze.com/img/breeze-b2b-social-card.jpg
 url: https://raw.githubusercontent.com/api-evangelist/breeze-airways/refs/heads/main/apis.yml
 x-type: company
