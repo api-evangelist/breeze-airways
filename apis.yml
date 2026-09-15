@@ -1,17 +1,15 @@
 aid: breeze-airways
 name: Breeze Airways
-description: 'Breeze Airways (Breeze Aviation Group, Inc.) is an American low-cost
-  point-to-point airline headquartered in Cottonwood Heights, Utah, founded by David
-  Neeleman and flying since May 2021. Its distribution technology surface is a partner-facing
-  IATA NDC gateway, documented at the Breeze B2B portal (ndc.flybreeze.com), which
-  exposes IATA Offers and Orders 21.3 XML messages — AirlineProfile, AirShopping,
-  OfferPrice, ServiceList, SeatAvailability and OrderCreate for shopping and selling,
-  plus OrderRetrieve, OrderQuote, OrderReshop and OrderChange for servicing — over
-  a Navitaire-hosted, IP-allowlisted gateway secured with a per-partner Azure API
-  Management subscription key and a 30-minute session bearer token. Access is limited
-  to accredited travel-agency partners (OTA, TMC and US federal government) with an
-  IATA/ARC number and an executed commercial agreement; Breeze also distributes over
-  Amadeus and Travelport GDS and via the TravelPro agent booking portal.'
+description: Breeze Airways (Breeze Aviation Group, Inc.) is an American low-cost point-to-point airline
+  headquartered in Cottonwood Heights, Utah, founded by David Neeleman and flying since May 2021. Its
+  distribution technology surface is a partner-facing IATA NDC gateway, documented at the Breeze B2B portal
+  (ndc.flybreeze.com), which exposes IATA Offers and Orders 21.3 XML messages — AirlineProfile, AirShopping,
+  OfferPrice, ServiceList, SeatAvailability and OrderCreate for shopping and selling, plus OrderRetrieve,
+  OrderQuote, OrderReshop and OrderChange for servicing — over a Navitaire-hosted, IP-allowlisted gateway
+  secured with a per-partner Azure API Management subscription key and a 30-minute session bearer token.
+  Access is limited to accredited travel-agency partners (OTA, TMC and US federal government) with an
+  IATA/ARC number and an executed commercial agreement; Breeze also distributes over Amadeus and Travelport
+  GDS and via the TravelPro agent booking portal.
 deliveryModel:
   model: saas
   open_source: false
@@ -59,17 +57,16 @@ tags:
 - Travel Agencies
 - IATA
 apis:
-- aid: breeze-airways-ndc-gateway
+- aid: breeze-airways:breeze-airways-ndc-gateway
   name: Breeze Airways NDC Gateway
-  description: 'The Breeze Airways NDC gateway is the airline''s direct-connect distribution
-    API for accredited travel partners. It speaks IATA Offers and Orders (NDC) 21.3
-    XML over HTTPS on a Navitaire-hosted gateway, split into three route families:
-    Shopping (AirlineProfile, AirShopping), Selling (Auth, OfferPrice, ServiceList,
-    SeatAvailability, OrderCreate) and Servicing (OrderRetrieve, OrderQuote, OrderReshop,
-    OrderChange, ServiceList, SeatAvailability). Every request carries an Ocp-Apim-Subscription-Key
-    header; all routes except AirShopping additionally require a session bearer token
-    obtained from the Auth endpoint with grant_type=client_credentials. Calling IPs
-    must be explicitly allowlisted by Breeze for the sandbox or production environment.'
+  description: 'The Breeze Airways NDC gateway is the airline''s direct-connect distribution API for accredited
+    travel partners. It speaks IATA Offers and Orders (NDC) 21.3 XML over HTTPS on a Navitaire-hosted
+    gateway, split into three route families: Shopping (AirlineProfile, AirShopping), Selling (Auth, OfferPrice,
+    ServiceList, SeatAvailability, OrderCreate) and Servicing (OrderRetrieve, OrderQuote, OrderReshop,
+    OrderChange, ServiceList, SeatAvailability). Every request carries an Ocp-Apim-Subscription-Key header;
+    all routes except AirShopping additionally require a session bearer token obtained from the Auth endpoint
+    with grant_type=client_credentials. Calling IPs must be explicitly allowlisted by Breeze for the sandbox
+    or production environment.'
   humanURL: https://ndc.flybreeze.com/docs/category/ndc-for-developers
   baseURL: https://ndcr4y.prod.mx.navitaire.com
   image: https://ndc.flybreeze.com/img/breeze-b2b-social-card.jpg
@@ -82,10 +79,9 @@ apis:
   x-evidence:
     fetched: '2026-08-01'
     baseURL_source: https://ndc.flybreeze.com/docs/ndc-for-developers/authentication
-    baseURL_note: 'Production host taken from the iss claim (ndcr4y.prod.mx.navitaire.com)
-      of the sample production bearer token published on the Breeze authentication
-      docs page; the gateway is IP-allowlisted so it is not anonymously reachable
-      (TCP connect fails, DNS resolves to 172.175.233.85).'
+    baseURL_note: Production host taken from the iss claim (ndcr4y.prod.mx.navitaire.com) of the sample
+      production bearer token published on the Breeze authentication docs page; the gateway is IP-allowlisted
+      so it is not anonymously reachable (TCP connect fails, DNS resolves to 172.175.233.85).
     sandbox_host: ndcr4y.test.mx.navitaire.com
     sandbox_source: https://ndc.flybreeze.com/news/new-breeze-ndc-test-environment-2025-08-27
   properties:
@@ -121,7 +117,10 @@ maintainers:
 common:
 - type: X-MCPServerCandidate
   url: mcp/breeze-airways-mcp.yml
-  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
+  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate
+    — a tool list derived from the published API contracts, not an existing server. The scorer already
+    read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type
+    surfaces with a server that does not exist.'
 - type: Website
   url: https://www.flybreeze.com/
 - type: DeveloperPortal
