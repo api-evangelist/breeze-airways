@@ -64,61 +64,106 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Breeze Airways (Breeze Aviation Group, Inc.) is an American low-cost, point-to-point airline headquartered in Cottonwood Heights, Utah, founded by David Neeleman and flying since May 2021.
+Breeze Airways (Breeze Aviation Group, Inc.) is an American low-cost point-to-point airline headquartered in Cottonwood Heights, Utah, founded by David Neeleman and flying since May 2021. Its distribution technology surface is a partner-facing IATA NDC gateway, documented at the Breeze B2B portal (ndc.flybreeze.com), which exposes IATA Offers and Orders 21.3 XML messages — AirlineProfile, AirShopping, OfferPrice, ServiceList, SeatAvailability and OrderCreate for shopping and selling, plus OrderRetrieve, OrderQuote, OrderReshop and OrderChange for servicing — over a Navitaire-hosted, IP-allowlisted gateway secured with a per-partner Azure API Management subscription key and a 30-minute session bearer token. Access is limited to accredited travel-agency partners (OTA, TMC and US federal government) with an IATA/ARC number and an executed commercial agreement; Breeze also distributes over Amadeus and Travelport GDS and via the TravelPro agent booking portal.
 
-Its programmable surface is a partner-facing **IATA NDC gateway** — IATA Offers and Orders 21.3 XML messages over a Navitaire-hosted, IP-allowlisted gateway — documented at the Breeze B2B portal. Access is limited to accredited travel agency partners (OTA, TMC, and US federal government) with an IATA/ARC number and an executed commercial agreement. Breeze also distributes over Amadeus (1A) and Travelport+ (1G) GDS and through the TravelPro agent booking portal.
+**Areas:** Company · Airlines · Travel · Aviation · NDC · Distribution · Booking · Reservations · Travel Agencies · IATA
 
-## API
+## Breeze Airways on APIs.io
 
-**Breeze Airways NDC Gateway** — IATA NDC 21.3
-- Docs: https://ndc.flybreeze.com/docs/category/ndc-for-developers
-- Production: `https://ndcr4y.prod.mx.navitaire.com`
-- Sandbox: `https://ndcr4y.test.mx.navitaire.com`
+Everything profiled for Breeze Airways is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/breeze-airways/](https://apis.io/providers/breeze-airways/)** — or go straight to one of the APIs or properties below.
 
-Thirteen documented routes across three families:
+### APIs (1)
 
-| Family | Routes |
+- [Breeze Airways NDC Gateway](https://apis.io/apis/breeze-airways/breeze-airways-ndc-gateway/) — The Breeze Airways NDC gateway is the airline's direct-connect distribution API for accredited travel partners. It speaks IATA Offers and Orders (NDC) 21.3…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [breeze-airways-mcp.yml](https://apis.io/servers/breeze-airways/breeze-airways-mcp-yml/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Breeze Airways Authentication](https://apis.io/security/breeze-airways/breeze-airways-authentication/)
+- [Breeze Airways Domain Security](https://apis.io/security/breeze-airways/breeze-airways-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Breeze Airways Scopes](https://apis.io/scopes/breeze-airways/breeze-airways-scopes/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.flybreeze.com/)
+- [Documentation](https://ndc.flybreeze.com/docs/category/ndc-for-developers)
+- [Getting started](https://ndc.flybreeze.com/docs/ndc-for-developers/getting-started)
+- [API reference](https://ndc.flybreeze.com/docs/category/ndc-shopping)
+- [Sign up](https://ndc.flybreeze.com/docs/become-a-breeze-partner)
+- [Support](https://www.flybreeze.com/support)
+- [Changelog](https://ndc.flybreeze.com/news)
+- [Blog](https://ndc.flybreeze.com/news)
+- [Terms of service](https://www.flybreeze.com/page/terms-of-use)
+- [Privacy policy](https://media.flybreeze.com/docs/policies/privacypolicy.pdf)
+- [Status](https://ndc.flybreeze.com/news)
+
+## API Evangelist rating
+
+**Kin Score 21.7** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
 |---|---|
-| Selling (auth) | `Auth` |
-| Shopping | `AirlineProfile`, `AirShopping` |
-| Selling | `OfferPrice`, `ServiceList`, `SeatAvailability`, `OrderCreate` |
-| Servicing | `OrderRetrieve`, `OrderQuote`, `OrderReshop`, `OrderChange`, `ServiceList`, `SeatAvailability` |
+| Discoverability | 73.2 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 25.6 |
+| Access clarity | 21.1 |
 
-Every request carries an `Ocp-Apim-Subscription-Key`; all routes except `AirShopping` also require a 30-minute session bearer token from `POST /api/Selling/r3.x/Auth`.
+**Agent readiness 6.3** — agent-aware
 
-## What Breeze publishes — and does not
-
-| | |
+| Agent-readiness dimension | Result |
 |---|---|
-| OpenAPI / Swagger | No — `/openapi.json`, `/openapi.yaml`, `/swagger.json` all miss |
-| AsyncAPI / webhooks | No — though issued tokens carry an `orderchangenotification` audience |
-| SDKs / packages | No first-party client libraries on npm, PyPI or any registry |
-| CLI, UI components | No |
-| MCP server | No (a *candidate* tool set is derived in `mcp/`, not published by Breeze) |
-| A2A agent card | No — `/.well-known/agent-card.json` and `/.well-known/agent.json` both miss on every host |
-| `/.well-known/*` | Nothing served on any host |
-| security.txt / VDP / trust center | None found |
-| Idempotency | Not documented — no key, no safe-retry contract |
-| Rate limits | Not published; volume governed commercially at go-live |
-| Status page | The B2B news feed is labelled "News & system status" |
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
 
-## Artifacts
+**Regulatory alignment 34.3** — Horizontal (data, software, accessibility, platform)
 
-| Dir | File |
-|---|---|
-| `authentication/` | Subscription key, Basic, session bearer, client-credentials, per-route table |
-| `scopes/` | JWT token audiences and role codes (no requestable OAuth scopes) |
-| `errors/` | NDC gateway error codes, error envelope, transport failures, known issues |
-| `conventions/` | NDC message semantics, identifier re-minting, sessions, business rules |
-| `conformance/` | IATA NDC 21.3, ONE Order, PADIS 9825, OAuth2, JWT, SecureFlight, EDIFACT |
-| `lifecycle/` | Versioning, compatibility statement, status feed, certification and go-live |
-| `changelog/` | Recent dated entries from the B2B news feed |
-| `sandbox/` | Test/production environments, access prerequisites, sample markets, test matrix |
-| `data-model/` | Offer / OfferItem / Order / OrderItem / Pax entity graph |
-| `skills/` | Three agent skills: shop-and-book, ancillaries, servicing |
-| `mcp/` | Candidate MCP tool set (derived, not published by Breeze) |
-| `well-known/` | Probe results for every `/.well-known/` path on every host |
-| `security/` | Domain security probe (TLS, HSTS, DNSSEC, CAA, SPF, DMARC) |
-| `llms/` | Generated `llms.txt` |
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/breeze-airways/](https://apis.io/providers/breeze-airways/).
 
-Enriched by the API Evangelist pipeline, 2026-08-01.
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Breeze Airways: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/breeze-airways/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
